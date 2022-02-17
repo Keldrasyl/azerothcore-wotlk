@@ -40,7 +40,9 @@
 #include <limits>
 #include <map>
 #include <string>
+#include <memory>
 
+class CreatureOutfit;
 class Item;
 struct DungeonProgressionRequirements;
 struct PlayerClassInfo;
@@ -729,6 +731,8 @@ public:
 
     typedef std::map<uint32, uint32> CharacterConversionMap;
 
+    typedef std::unordered_map<uint32, std::shared_ptr<CreatureOutfit>> CreatureOutfitContainer;
+
     GameObjectTemplate const* GetGameObjectTemplate(uint32 entry);
     bool IsGameObjectStaticTransport(uint32 entry);
     [[nodiscard]] GameObjectTemplateContainer const* GetGameObjectTemplates() const { return &_gameObjectTemplateStore; }
@@ -1291,6 +1295,11 @@ public:
     bool AddGameTele(GameTele& data);
     bool DeleteGameTele(std::string_view name);
 
+    const CreatureOutfitContainer& GetCreatureOutfitMap() const { return _creatureOutfitStore; }
+    std::shared_ptr<CreatureOutfit> const & GetOutfit(uint32 modelid) const;
+    uint32 GetRealDisplayId(uint32 modelid) const;
+    void LoadCreatureOutfits();
+
     [[nodiscard]] TrainerSpellData const* GetNpcTrainerSpells(uint32 entry) const
     {
         CacheTrainerSpellContainer::const_iterator  iter = _cacheTrainerSpellStore.find(entry);
@@ -1449,7 +1458,7 @@ private:
 
     PageTextContainer _pageTextStore;
     InstanceTemplateContainer _instanceTemplateStore;
-
+    CreatureOutfitContainer _creatureOutfitStore;
 private:
     void LoadScripts(ScriptsType type);
     void LoadQuestRelationsHelper(QuestRelations& map, std::string const& table, bool starter, bool go);

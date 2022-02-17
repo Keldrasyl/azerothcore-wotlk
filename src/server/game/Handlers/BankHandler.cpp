@@ -16,6 +16,7 @@
  */
 
 #include "BankPackets.h"
+#include "Creature.h"
 #include "DBCStores.h"
 #include "Item.h"
 #include "Log.h"
@@ -49,6 +50,11 @@ void WorldSession::HandleBankerActivateOpcode(WorldPacket& recvData)
     LOG_DEBUG("network", "WORLD: Received CMSG_BANKER_ACTIVATE");
 
     recvData >> guid;
+#ifndef DISABLE_DRESSNPCS_CORESOUNDS
+    if (guid.IsAnyTypeCreature())
+        if (Creature *creature = _player->GetMap()->GetCreature(guid))
+            creature->SendMirrorSound(_player, 0);
+#endif
 
     Creature* unit = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_BANKER);
     if (!unit)

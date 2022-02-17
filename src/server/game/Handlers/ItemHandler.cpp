@@ -974,6 +974,12 @@ void WorldSession::HandleListInventoryOpcode(WorldPacket& recvData)
 
     recvData >> guid;
 
+#ifndef DISABLE_DRESSNPCS_CORESOUNDS
+    if (guid.IsAnyTypeCreature())
+        if (Creature *creature = _player->GetMap()->GetCreature(guid))
+            creature->SendMirrorSound(_player, 0);
+#endif
+
     if (!GetPlayer()->IsAlive())
         return;
 

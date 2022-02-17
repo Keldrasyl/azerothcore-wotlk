@@ -28,9 +28,10 @@
 #include "UpdateMask.h"
 #include "World.h"
 #include <list>
+#include <memory>
 
 class SpellInfo;
-
+class CreatureOutfit;
 class CreatureAI;
 class Quest;
 class Player;
@@ -53,6 +54,13 @@ public:
 
     void SetObjectScale(float scale) override;
     void SetDisplayId(uint32 modelId) override;
+    //Dress NPC
+    uint32 GetDisplayId() const final;
+    void SetDisplayIdRaw(uint32 modelId);
+    std::shared_ptr<CreatureOutfit> & GetOutfit() { return m_outfit; };
+    void SetOutfit(std::shared_ptr<CreatureOutfit> const & outfit);
+    void SetMirrorImageFlag(bool on) { if (on) SetFlag(UNIT_FIELD_FLAGS_2, UNIT_FLAG2_MIRROR_IMAGE); else RemoveFlag(UNIT_FIELD_FLAGS_2, UNIT_FLAG2_MIRROR_IMAGE); };
+    void SendMirrorSound(Player* target, uint8 type);
 
     void DisappearAndDie();
 
@@ -460,7 +468,7 @@ private:
     Spell const* _focusSpell;   ///> Locks the target during spell cast for proper facing
 
     bool _isMissingSwimmingFlagOutOfCombat;
-
+    std::shared_ptr<CreatureOutfit> m_outfit;
     uint32 m_assistanceTimer;
 
 };

@@ -65,6 +65,11 @@ void WorldSession::HandleTaxiQueryAvailableNodes(WorldPacket& recvData)
 
     ObjectGuid guid;
     recvData >> guid;
+#ifndef DISABLE_DRESSNPCS_CORESOUNDS
+    if (guid.IsAnyTypeCreature())
+        if (Creature *creature = _player->GetMap()->GetCreature(guid))
+            creature->SendMirrorSound(_player, 0);
+#endif
 
     // cheating checks
     Creature* unit = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_FLIGHTMASTER);
