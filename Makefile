@@ -1,6 +1,5 @@
 build:
-	./acore.sh 14 build:compile
-	make restart-world
+	./acore.sh 5 1
 start:
 	./acore.sh 14 start:app:d
 stop:
